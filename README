@@ -1,0 +1,186 @@
+
+Employee Management System – Backend
+📌 Project Overview
+
+This is a Node.js + Express + MongoDB backend application developed as part of the BucketStudy Full Stack Development Internship.
+
+The backend provides secure REST APIs for:
+
+User Authentication (Register & Login)
+
+Employee Management (CRUD operations)
+
+JWT-based Authorization
+
+All APIs were tested using Thunder Client.
+
+🛠️ Tech Stack
+
+Node.js
+
+Express.js
+
+MongoDB (Mongoose)
+
+JSON Web Token (JWT)
+
+bcryptjs
+
+Thunder Client (API Testing)
+
+📂 Folder Structure
+backend/
+│
+├── models/
+│   ├── User.js
+│   └── Employee.js
+│
+├── routes/
+│   ├── auth.js
+│   └── employee.js
+│
+├── middleware/
+│   └── authMiddleware.js
+│
+├── screenshots/
+│   ├── 01_register_user.png
+│   ├── 02_login_user.png
+│   ├── 03_add_employee.png
+│   ├── 04_get_all_employees.png
+│   ├── 05_update_employee.png
+│   └── 06_delete_employee.png
+│
+├── .env
+├── server.js
+├── package.json
+└── README.md
+
+🔐 Authentication APIs
+1️⃣ Register User
+
+POST /api/auth/register
+
+Request Body
+
+{
+  "name": "Admin",
+  "email": "admin@gmail.com",
+  "password": "admin123",
+  "role": "admin"
+}
+
+
+📸 Screenshot: 01_register_user.png
+
+2️⃣ Login User
+
+POST /api/auth/login
+
+Request Body
+
+{
+  "email": "admin@gmail.com",
+  "password": "admin123"
+}
+
+
+Response
+
+{
+  "message": "Login successful",
+  "token": "JWT_TOKEN"
+}
+
+
+📸 Screenshot: 02_login_user.png
+
+👨‍💼 Employee Management APIs
+
+⚠️ All employee APIs require JWT Token in headers
+
+Header
+
+Authorization: Bearer <JWT_TOKEN>
+Content-Type: application/json
+
+3️⃣ Add Employee
+
+POST /api/employees
+
+Request Body
+
+{
+  "name": "Jijith",
+  "email": "jijitharun@gmail.com",
+  "department": "CSE",
+  "salary": 40000
+}
+
+
+📸 Screenshot: 03_add_employee.png
+
+4️⃣ Get All Employees
+
+GET /api/employees
+
+📸 Screenshot: 04_get_all_employees.png
+
+5️⃣ Update Employee
+
+PUT /api/employees/:id
+
+Request Body
+
+{
+  "department": "HR",
+  "salary": 45000
+}
+
+
+📸 Screenshot: 05_update_employee.png
+
+6️⃣ Delete Employee
+
+DELETE /api/employees/:id
+
+📸 Screenshot: 06_delete_employee.png
+
+▶️ How to Run the Backend
+Step 1: Install Dependencies
+npm install
+
+Step 2: Create .env File
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+
+Step 3: Start Server
+npm run dev
+
+
+Server will run at:
+
+http://localhost:5000
+
+🧪 API Testing
+
+All APIs were tested using Thunder Client inside VS Code.
+
+📁 All testing screenshots are available in the screenshots folder.
+
+✅ Internship Task Status
+
+✔ User Authentication implemented
+
+✔ JWT Authorization implemented
+
+✔ Employee CRUD operations completed
+
+✔ API testing screenshots added
+
+✔ Ready for submission
+
+👤 Author
+
+Name: Hariharan
+Internship: BucketStudy – Full Stack Development
