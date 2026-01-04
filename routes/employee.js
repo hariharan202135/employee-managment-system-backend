@@ -1,56 +1,68 @@
 const express = require("express");
 const router = express.Router();
 const Employee = require("../models/Employee");
-const authMiddleware = require("../middleware/authMiddleware");
+const authMiddleware = require("../middleware/authMiddleware"); // ✅ FIXED
 
-// ✅ CREATE EMPLOYEE
+// CREATE EMPLOYEE
 router.post("/", authMiddleware, async (req, res) => {
-  const { name, email, department, salary } = req.body;
+  try {
+    const { name, email, department, salary } = req.body;
 
-  if (!name || !email || !department || !salary) {
-    return res.status(400).json({ message: "All fields are required" });
+    if (!name || !email || !department || !salary) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const employee = new Employee({ name, email, department, salary });
+    await employee.save();
+
+    res.status(201).json({ message: "Employee created", employee });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
   }
-
-  const employee = new Employee({ name, email, department, salary });
-  await employee.save();
-
-  res.status(201).json({ message: "Employee created", employee });
 });
 
-// ✅ GET ALL EMPLOYEES
+// GET ALL EMPLOYEES
 router.get("/", authMiddleware, async (req, res) => {
-  const employees = await Employee.find();
-  res.json(employees);
+  try {
+    const employees = await Employee.find();
+    res.json(employees);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
-// ✅ UPDATE EMPLOYEE  (🔥 THIS WAS MISSING / WRONG)
+// UPDATE EMPLOYEE
 router.put("/:id", authMiddleware, async (req, res) => {
-  const { id } = req.params;
+  try {
+    const employee = await Employee.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
 
-  const employee = await Employee.findByIdAndUpdate(
-    id,
-    req.body,
-    { new: true }
-  );
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
 
-  if (!employee) {
-    return res.status(404).json({ message: "Employee not found" });
+    res.json({ message: "Employee updated", employee });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
   }
-
-  res.json({ message: "Employee updated", employee });
 });
 
-// ✅ DELETE EMPLOYEE
+// DELETE EMPLOYEE
 router.delete("/:id", authMiddleware, async (req, res) => {
-  const { id } = req.params;
+  try {
+    const employee = await Employee.findByIdAndDelete(req.params.id);
 
-  const employee = await Employee.findByIdAndDelete(id);
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
 
-  if (!employee) {
-    return res.status(404).json({ message: "Employee not found" });
+    res.json({ message: "Employee deleted" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
   }
-
-  res.json({ message: "Employee deleted" });
 });
 
 module.exports = router;
