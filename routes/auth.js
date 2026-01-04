@@ -5,9 +5,9 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-/**
- * REGISTER
- */
+/* =========================
+   REGISTER USER
+========================= */
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -27,36 +27,46 @@ router.post("/register", async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: role || "employee"
+      role: role || "employee",
     });
 
     await user.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({
+      message: "User registered successfully",
+    });
   } catch (error) {
-    res.status(500).json({ message: "Registration failed", error: error.message });
+    res.status(500).json({
+      message: "Registration failed",
+    });
   }
 });
 
-/**
- * LOGIN
- */
+/* =========================
+   LOGIN USER
+========================= */
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password required" });
+      return res.status(400).json({
+        message: "Email and password are required",
+      });
     }
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({
+        message: "Invalid email or password",
+      });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({
+        message: "Invalid email or password",
+      });
     }
 
     const token = jwt.sign(
@@ -65,18 +75,19 @@ router.post("/login", async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    res.json({
-      message: "Login successful",
+    res.status(200).json({
       token,
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
-      }
+        role: user.role,
+      },
     });
   } catch (error) {
-    res.status(500).json({ message: "Login failed", error: error.message });
+    res.status(500).json({
+      message: "Login failed",
+    });
   }
 });
 
