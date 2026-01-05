@@ -7,17 +7,23 @@ dotenv.config();
 
 const app = express();
 
-/* ✅ CORRECT CORS FOR LOCAL + DEPLOYED FRONTEND */
+/* ✅ FULL CORS CONFIG (LOCAL + NETLIFY + VERCEL) */
 app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "http://localhost:5174"
+      "http://localhost:5174",
+      "https://employeemanagmentfrontend21.netlify.app",
+      "https://employee-managment-frontendproject1.vercel.app",
+      "https://employee-managment-frontend2.vercel.app"
     ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"]
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// ✅ VERY IMPORTANT: handle preflight
+app.options("*", cors());
 
 app.use(express.json());
 
