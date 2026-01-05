@@ -7,37 +7,47 @@ dotenv.config();
 
 const app = express();
 
-/* ✅ FULL CORS CONFIG (LOCAL + NETLIFY + VERCEL) */
+/* =========================
+   ✅ FINAL CORS CONFIG
+   =========================
+   - Works for Netlify (any domain)
+   - Works for Vercel
+   - Works for localhost
+   - Prevents browser blocking
+*/
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "https://employeemanagmentfrontend21.netlify.app",
-      "https://employee-managment-frontendproject1.vercel.app",
-      "https://employee-managment-frontend2.vercel.app"
-    ],
+    origin: "*", // ✅ allow all origins
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-// ✅ VERY IMPORTANT: handle preflight
+// ✅ Handle preflight requests
 app.options("*", cors());
 
+/* =========================
+   MIDDLEWARE
+   ========================= */
 app.use(express.json());
 
-/* ROUTES */
+/* =========================
+   ROUTES
+   ========================= */
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/employees", require("./routes/employee"));
 
-/* DATABASE */
+/* =========================
+   DATABASE CONNECTION
+   ========================= */
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected Successfully"))
   .catch((err) => console.error("MongoDB Error:", err));
 
-/* SERVER */
+/* =========================
+   SERVER START
+   ========================= */
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
